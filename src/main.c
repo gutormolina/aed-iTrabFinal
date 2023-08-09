@@ -24,6 +24,7 @@ int main(void)
         printf(" /%.02f, l:%d, c:%d/  ", teste->info, teste->line, teste->column);
         teste = teste->right;
     }
+    teste = ini;
     for(int i=1; i<4; i++){
         printf("\n/%.02f, l:%d, c:%d/", teste->info,  teste->line, teste->column);
         teste = teste->below;
@@ -33,58 +34,35 @@ int main(void)
 
 Matrix* inicia(int linhas, int colunas){
     Matrix *ini = (Matrix*)malloc( sizeof(Matrix));
-    Matrix *aux, *nova = (Matrix*)malloc(sizeof(Matrix));
-
+    
     ini->column = -1;
     ini->line = -1;
     ini->info = 666;
     ini->right = ini;
     ini->below = ini;
 
-    for(int i=1; i<linhas; i++){
-       
+    for(int i = linhas; i>0; i--){
+        Matrix *nova = (Matrix*)malloc(sizeof(Matrix));
         nova->info = i;
         nova->line = -1;
         nova->column = 0;
 
-        if (ini->right == ini)
-        {
-            nova->right = ini->right;
+            nova->right = ini;
             ini->right = nova;
-        }else{
-            aux = ini;
-            for(int i=0; i<5; i++){
-                if(ini->right == aux){
-                    aux = ini->right;
-                    ini->right = nova;
-                    nova->right = aux;
-                }
-                ini=ini->right;
-            }
-        }
         }
 
-        for(int j=1; j<colunas; j++){
-            nova->info = j;
-            nova->line = 0;
-            nova->column = -1;
+    ini= ini->right;
 
-            if (ini->below == ini)
-            {
-                nova->below = ini->below;
-                ini->below = nova;
-            }else{
-                aux = ini;
-                for(int i=0; i<5; i++){
-                    if(ini->below == aux){
-                        aux = ini->below;
-                        ini->below = nova;
-                        nova->below = aux;
-                    }
-                    ini=ini->below;
-                }
-            }
-        }
+    for(int j=colunas; j>0; j--){
+        Matrix  *nova1 = (Matrix*)malloc(sizeof(Matrix));
+        nova1->info = j;
+        nova1->line = 0;
+        nova1->column = -1;
+
+            nova1->below = ini->below;
+            ini->below = nova1;
+        
+    }
         ini=ini->below;
         return ini;
 }
