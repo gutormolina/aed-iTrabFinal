@@ -10,29 +10,29 @@ struct matrix {
 };
 
 typedef struct matrix Matrix;
-Matrix* inicia(int linhas, int colunas);
+Matrix* iniciaCabecas(int linhas, int colunas);
 
 
 int main(void)
 {
 	Matrix *teste, *ini ;
 
-    ini = inicia(2, 3);
+    ini = iniciaCabecas(2, 4);
 
     teste = ini;
-    for(int i=1; i<4; i++){
+    for(int i=1; i<5; i++){
         printf(" /%.02f, l:%d, c:%d/  ", teste->info, teste->line, teste->column);
         teste = teste->right;
     }
     teste = ini;
-    for(int i=1; i<4; i++){
+    for(int i=1; i<6; i++){
         printf("\n/%.02f, l:%d, c:%d/", teste->info,  teste->line, teste->column);
         teste = teste->below;
     }
     free(ini);
 }
 
-Matrix* inicia(int linhas, int colunas){
+Matrix* iniciaCabecas(int linhas, int colunas){
     Matrix *ini = (Matrix*)malloc( sizeof(Matrix));
     
     ini->column = -1;
@@ -40,18 +40,16 @@ Matrix* inicia(int linhas, int colunas){
     ini->info = 666;
     ini->right = ini;
     ini->below = ini;
-
-    for(int i = linhas; i>0; i--){
+  
+    for(int j=linhas; j>0; j--){
         Matrix *nova = (Matrix*)malloc(sizeof(Matrix));
-        nova->info = i;
+        nova->info = j;
         nova->line = -1;
         nova->column = 0;
 
-            nova->right = ini;
+            nova->right = ini->right;
             ini->right = nova;
         }
-
-    ini= ini->right;
 
     for(int j=colunas; j>0; j--){
         Matrix  *nova1 = (Matrix*)malloc(sizeof(Matrix));
@@ -63,12 +61,12 @@ Matrix* inicia(int linhas, int colunas){
             ini->below = nova1;
         
     }
-        ini=ini->below;
+    
         return ini;
 }
 
 
-
+/*
 
 void matrix_destroy( Matrix* m ){
 
@@ -102,3 +100,6 @@ void matrix_setelem( Matrix* m, int x, int y, float elem ){
 
     
 }
+
+
+*/
