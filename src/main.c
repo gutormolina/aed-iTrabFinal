@@ -10,29 +10,46 @@ struct matrix {
 };
 
 typedef struct matrix Matrix;
-Matrix* iniciaCabecas(int linhas, int colunas);
+Matrix* matrix_create(int colunas, int linhas);
 
 
 int main(void)
 {
+    int linhas = 0, colunas = 0;
+    printf("Digite a qntd de linhas da matriz:");
+    scanf("%d", &linhas);
+    printf("Digite a qntd de colunas da matriz:");
+    scanf("%d", &colunas);
+
 	Matrix *teste, *ini ;
 
-    ini = iniciaCabecas(2, 4);
+    ini = matrix_create(colunas, linhas);
 
     teste = ini;
-    for(int i=1; i<5; i++){
-        printf(" /%.02f, l:%d, c:%d/  ", teste->info, teste->line, teste->column);
-        teste = teste->right;
-    }
+    
     teste = ini;
-    for(int i=1; i<6; i++){
-        printf("\n/%.02f, l:%d, c:%d/", teste->info,  teste->line, teste->column);
+    for(int i=1; i<linhas; i++){
+
+
+        for(int i=1; i<colunas; i++){
+            printf("\n/%.02f, l:%d, c:%d/", teste->info, teste->line, teste->column);
+            teste = teste->right;
+        }
         teste = teste->below;
     }
     free(ini);
+
 }
 
-Matrix* iniciaCabecas(int linhas, int colunas){
+Matrix* matrix_create( int colunas , int linhas ){
+    int  l=-1, c=-1, valor=0 ;
+/*    printf("Digite a qntd de linhas da matriz:");
+    scanf("%d", &linhas);
+    printf("Digite a qntd de colunas da matriz:");
+    scanf("%d", &colunas);
+*/
+//----------------------- inicia cabeças --------------------------------
+
     Matrix *ini = (Matrix*)malloc( sizeof(Matrix));
     
     ini->column = -1;
@@ -61,9 +78,72 @@ Matrix* iniciaCabecas(int linhas, int colunas){
             ini->below = nova1;
         
     }
+
+//----------------------------------------------------------------------------------------------
+        printf("Digite a linha, coluna e valor a ser guardado na matriz:");
+        scanf("%d", &l);
+
+    while(1) {
+        if( l == 0 ){
+            break;
+        }
+        scanf("%d", &c);
+        scanf("%d", &valor);
+        Matrix *aux, *nova = (Matrix*)malloc(sizeof(Matrix));
+        nova->info = valor;
+        nova->column = c;
+        nova->line = l;
+        for(int i=0; i<colunas; i++){
+            if(ini->info == c){
+                if(ini->below == ini){
+                    nova->below = ini->below;
+                    ini->below = nova;
+                }else{
+                    aux = ini;
+                    for(int i=1; i<colunas; i++){
+                        if(ini->below->column < c){
+                            ini = ini->below;
+                            break;;
+                        }else{
+                            nova->below = ini->below;
+                            ini->below = nova;
+                        }
+                        ini = ini->below;
+                    }
+                }
+            }
+            printf("L: %d", l);
+            ini = ini->below;
+        }
+        
+        for(int i=0; i<linhas; i++){
+            if(ini->info == l){
+                if(ini->right == ini){
+                    nova->right = ini->right;
+                    ini->right = nova;
+                }else{
+                    aux = ini;
+                    for(int i=1; i<linhas; i++){
+                        if(ini->right->column < c){
+                            ini = ini->right;
+                            break;
+                        }else{
+                            nova->right = ini->right;
+                            ini->right = nova;
+                        }
+                        ini = ini->right;
+                    }
+                }
+            }
+            ini = ini->right;
+        }
+
     
         return ini;
+    }
+
 }
+
 
 
 /*
