@@ -2,8 +2,8 @@
 #include <stdlib.h>
 
 struct matrix {
-	struct matrix* right;   // aponta o prÃ³ximo elemento diferente de zero na mesma linha
-	struct matrix* below;   // aponta o prÃ³ximo elemento diferente de zero na mesma coluna
+	struct matrix* right;   // aponta o proximo elemento diferente de zero na mesma linha
+	struct matrix* below;   // aponta o proximo elemento diferente de zero na mesma coluna
 	int line;
 	int column;
 	float info;
