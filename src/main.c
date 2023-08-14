@@ -79,14 +79,12 @@ Matrix* criaCabecas( int linhas, int colunas){          // Função cria cabeça
 
 void insere(Matrix *ini, int linhas, int colunas, int l, int c, float valor){
 
-//    printf("\n insere: valor:%f, linha:%d, coluna: %d", valor, l, c);
     if(linhas < l || colunas < c){
-        printf("\n\tERRO!");
+        printf("\n\tERRO!\n\n");
         return 0;
-    }
+    }{
 
-
-    Matrix *aux, *nova = (Matrix*)malloc(sizeof(Matrix)),   *teste = ini;
+         Matrix *aux, *nova = (Matrix*)malloc(sizeof(Matrix)), *teste = ini;;
     nova->info = valor;
     nova->column = c;
     nova->line = l;
@@ -94,26 +92,30 @@ void insere(Matrix *ini, int linhas, int colunas, int l, int c, float valor){
     printf("\n insere: valor:%f, linha:%d, coluna: %d\n\n", nova->info, nova->line, nova->column);
     
     for(int i=0; i<=l; i++){
-       if(ini->info == l){
+       if(i == l){
             for(int j=0; j<=c; j++){
                 if (j == c)
                 {
                     aux = ini->right;
                     ini->right = nova;
                     nova->right = aux;
-
+aux = NULL;
                     aux = ini->below;
                     ini->below = nova;
                     nova->below = aux;
                 }
-                j++;
+               
                 ini = ini->right;
             }
        }
-       i++;
+       
        ini = ini->below;
     }
-    //imprime(teste, linhas, colunas);
+
+    ini = teste;
+    imprime(teste, linhas, colunas);
+
+    }
 }
 
 Matrix* matrix_create( int colunas , int linhas ){
