@@ -11,10 +11,11 @@ struct matrix
 };
 
 typedef struct matrix Matrix;
-void imprime(Matrix *ini, int linhas, int colunas);
+//void imprime(Matrix *ini, int linhas, int colunas);
 Matrix *criaCabecas(int linhas, int colunas);
 void insere(Matrix *ini, int linhas, int colunas, int l, int c, float valor);
 Matrix *matrix_create(int colunas, int linhas);
+void matrix_print(Matrix *m);
 
 int main(void)
 {
@@ -28,7 +29,8 @@ int main(void)
 
     ini = matrix_create(colunas, linhas);
 
-    imprime(ini, linhas, colunas);
+    matrix_print(ini);
+    //imprime(ini, linhas, colunas);
 
     free(ini);
 }
@@ -139,7 +141,7 @@ void insere(Matrix *ini, int linhas, int colunas, int l, int c, float valor)
 
     printf("\n insere: valor: %.3f, linha: %d, coluna: %d\n\n", nova->info, nova->line, nova->column);
 
-    imprime(ini, linhas, colunas);
+    matrix_print(ini);
 }
 
 Matrix *matrix_create(int colunas, int linhas)
@@ -170,14 +172,22 @@ Matrix *matrix_create(int colunas, int linhas)
 void matrix_destroy( Matrix* m ){
 
 }
-
+*/
 void matrix_print( Matrix* m ){
-    while(1){
-        if(m->info != 0){
-            printf("[ %d, %d, %f]", m->line, m->column, m->info);
+    Matrix *col = m->below;
+    
+    while (col) {
+        Matrix *imprimir = col->right;
+        
+        while (imprimir) {
+            printf("[ %d, %d, %.2f] ", imprimir->line, imprimir->column, imprimir->info);
+            imprimir = imprimir->right;
         }
+        
+        printf("\n");
+        col = col->below;
     }
-}
+}/*
 
 Matrix* matrix_add( Matrix* m, Matrix* n ){
 
