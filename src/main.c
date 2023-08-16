@@ -1,15 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "matrix.h"
 
-struct matrix {
-	struct matrix* right;   // aponta o proximo elemento diferente de zero na mesma linha
-	struct matrix* below;   // aponta o proximo elemento diferente de zero na mesma coluna
-	int line;
-	int column;
-	float info;
-};
-
-typedef struct matrix Matrix;
 void imprime(Matrix *ini, int linhas, int colunas);
 Matrix* criaCabecas( int linhas, int colunas);
 void insere(Matrix *ini, int linhas, int colunas, int l, int c, float valor);
