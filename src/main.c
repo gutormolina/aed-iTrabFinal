@@ -80,39 +80,64 @@ void insere(Matrix *ini, int linhas, int colunas, int l, int c, float valor){
         return;
     } else{
 
-    Matrix *aux, *nova = (Matrix*)malloc(sizeof(Matrix)), *teste = ini;
+    Matrix *aux, *nova = (Matrix*)malloc(sizeof(Matrix)), *teste = ini, *anterior = ini;
     nova->info = valor;
     nova->column = c;
     nova->line = l;
 
     for(int j = 1; j <=c; j++)
-        ini = ini->right;
-        
+    {
+     ini = ini->right;
+     anterior = ini;   
+    }
+      aux = ini;  
     for(int i = 1; i <= linhas; i++)
     {
-        if ((ini->below->column == -1) || (teste->below->column > nova->column))
+        if ((ini->column == -1) || (ini->column > nova->column))
         {
-            nova->below = ini->below;
-            ini->below = nova;
-        }
+            anterior->below = nova;
+            nova->below = ini;
+            break;
+        }        
+        
         ini = ini->below;
+        anterior = ini;
     }
-    printf("\t %d %d %f\n\n", ini->line, ini->column, ini->info);
-    //===========
-    aux = ini;
+//=============
+    for(int i = 0; i <= colunas; i++){
+printf("\tteste: %d %d %f\n\n", aux->line, aux->column, aux->info);
+    aux=aux->below;
+    }    
+//===========
     
+    printf("-------------------------\n");
     for(int j = 1; j <=l; j++)
+    {
         teste = teste->below;
+        anterior = teste;
+    }
+    
+aux = teste;
+
     for(int j = 1; j <= colunas; j++)
     {
-        if ( (teste->right->line == -1) || (teste->right->line > nova->line) )
+        if ( (teste->line == -1) || (teste->line > nova->line) )
         {
-            aux->right = teste->right;
-            teste->right = aux;            
+            anterior->right = nova;
+            nova->right = teste;
+            break;
         }
         teste = teste->right;
+        anterior = teste;
     }
-    printf("\t %d %d %f\n\n", teste->line, teste->column, teste->info);
+    
+//=============
+    for(int i = 0; i <= colunas; i++){
+printf("\tteste: %d %d %f\n\n", aux->line, aux->column, aux->info);
+    aux=aux->right;
+    }    
+//===========
+
     ini = teste;
     imprime(ini, linhas, colunas);
     }
