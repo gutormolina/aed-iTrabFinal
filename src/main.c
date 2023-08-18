@@ -87,21 +87,36 @@ void insere(Matrix *ini, int linhas, int colunas, int l, int c, float valor){
 
     for(int j = 1; j <=c; j++)
     {
+     anterior = ini;  
      ini = ini->right;
-     anterior = ini;   
+      
     }
       aux = ini;  
     for(int i = 1; i <= linhas; i++)
     {
-        if ((ini->column == -1) || (ini->column > nova->column))
+        if (ini->below == ini)
         {
-            anterior->below = nova;
+            ini->below = nova;
             nova->below = ini;
+        } else if (ini->line > nova->line)
+        {
+            nova->below = ini;
+            anterior->below = nova;
             break;
-        }        
+        }else if (ini->below->column == -1)
+        {
+            anterior = ini;  
+            ini = ini->below;
+            
+            nova->below = ini;
+            anterior->below = nova;
+            break;
+        }
         
+         
+        anterior = ini;  
         ini = ini->below;
-        anterior = ini;
+        
     }
 //=============
     for(int i = 0; i <= colunas; i++){
@@ -109,26 +124,39 @@ printf("\tteste: %d %d %f\n\n", aux->line, aux->column, aux->info);
     aux=aux->below;
     }    
 //===========
-    
+    anterior = NULL;
+
     printf("-------------------------\n");
     for(int j = 1; j <=l; j++)
     {
-        teste = teste->below;
         anterior = teste;
+        teste = teste->below;
     }
     
 aux = teste;
 
     for(int j = 1; j <= colunas; j++)
     {
-        if ( (teste->line == -1) || (teste->line > nova->line) )
+        if ( teste->right == teste )
+        {
+            teste->right = nova;
+            nova->right = teste;
+        } else if (teste->column > nova->column )
         {
             anterior->right = nova;
             nova->right = teste;
             break;
-        }
-        teste = teste->right;
+        } else if ( teste->right->line == -1)
+        {
+            anterior = teste;
+            teste = teste->right;
+
+            anterior->right = nova;
+            nova->right = teste;
+            break;
+        }        
         anterior = teste;
+        teste = teste->right;
     }
     
 //=============
@@ -139,7 +167,6 @@ printf("\tteste: %d %d %f\n\n", aux->line, aux->column, aux->info);
 //===========
 
     ini = teste;
-    imprime(ini, linhas, colunas);
     }
 }
 
