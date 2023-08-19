@@ -11,6 +11,7 @@ float matrix_getelem( Matrix* m, int x, int y );
 int cont_linhas(Matrix *m);
 int cont_colunas(Matrix *m);
 void matrix_setelem( Matrix* m, int x, int y, float elem );
+void matrix_destroy( Matrix* m );
 
 int main(void)
 {
@@ -22,12 +23,13 @@ int main(void)
     
 //  f = matrix_getelem(ini, 1, 1);
 //  printf("\n f = %.2f", f);
-    matrix_setelem(ini, 1, 1, 1.23);
-    matrix_setelem(ini, 1, 2, 2.34);
+//    matrix_setelem(ini, 1, 1, 1.23);
+//    matrix_setelem(ini, 1, 2, 2.34);
 
     matrix_print( ini );
-    free(ini);
-
+    matrix_destroy(ini);
+    
+    printf("\n Matriz excluida2!");
 }
 
 void imprime(Matrix *ini, int linhas, int colunas){
@@ -43,7 +45,7 @@ void imprime(Matrix *ini, int linhas, int colunas){
     }
 }
 
-Matrix* criaCabecas( int linhas, int colunas){          // Função cria cabeças         <=======
+Matrix* criaCabecas( int linhas, int colunas) {          // Função cria cabeças         <=======
     Matrix *ini = (Matrix*)malloc( sizeof(Matrix));
     
     ini->column = -1;
@@ -52,7 +54,7 @@ Matrix* criaCabecas( int linhas, int colunas){          // Função cria cabeça
     ini->right = ini;
     ini->below = ini;
   
-    for(int j=linhas; j>0; j--){
+    for(int j=linhas; j>0; j--) {
         Matrix *nova = (Matrix*)malloc(sizeof(Matrix));
         nova->info = j;
         nova->line = -1;
@@ -61,9 +63,9 @@ Matrix* criaCabecas( int linhas, int colunas){          // Função cria cabeça
 
             nova->below = ini->below;
             ini->below = nova;
-        }
+    }
 
-    for(int j=colunas; j>0; j--){
+    for(int j=colunas; j>0; j--) {
         Matrix  *nova1 = (Matrix*)malloc(sizeof(Matrix));
         nova1->info = j;
         nova1->line = 0;
@@ -76,34 +78,30 @@ Matrix* criaCabecas( int linhas, int colunas){          // Função cria cabeça
     return ini;
 }
 
-void insere(Matrix *ini, int linhas, int colunas, int l, int c, float valor){
+void insere(Matrix *ini, int linhas, int colunas, int l, int c, float valor) {
 
     Matrix *nova = (Matrix*)malloc(sizeof(Matrix)), *teste = ini, *anterior = ini;
     nova->info = valor;
     nova->column = c;
     nova->line = l;
 
-    for(int j = 1; j <=c; j++)
-    {
+    for(int j = 1; j <=c; j++) {
     anterior = ini;  
     ini = ini->right;
      
     }
 
-    for(int i = 1; i <= linhas; i++)
-    {
+    for(int i = 1; i <= linhas; i++) {
         if (ini->below == ini)
         {
             ini->below = nova;
             nova->below = ini;
             break;
-        } else if (ini->line > nova->line)
-        {
+        } else if (ini->line > nova->line) {
             nova->below = ini;
             anterior->below = nova;
             break;
-        }else if (ini->below->column == -1)
-        {
+        }else if (ini->below->column == -1) {
             anterior = ini;  
             ini = ini->below;
                
@@ -118,45 +116,44 @@ void insere(Matrix *ini, int linhas, int colunas, int l, int c, float valor){
        }
     
     anterior = NULL;
+    ini = teste;
 
-    for(int j = 1; j <=l; j++)
-    {
-        anterior = teste;
-        teste = teste->below;
+    for(int j = 1; j <=l; j++) {
+        anterior = ini;
+        ini = ini->below;
     }
 
-    for(int j = 1; j <= colunas; j++)
-    {
-        if ( teste->right == teste )
-        {
-            teste->right = nova;
-            nova->right = teste;
+    for(int j = 1; j <= colunas; j++) {
+        if ( ini->right == ini ) {
+            ini->right = nova;
+            nova->right = ini;
             break;
-        } else if (teste->column > nova->column )
-        {
+        } else if (ini->column > nova->column ) {
             anterior->right = nova;
-            nova->right = teste;
+            nova->right = ini;
             break;
-        } else if ( teste->right->line == -1)
-        {
-            anterior = teste;
-            teste = teste->right;
+        } else if ( ini->right->line == -1) {
+            anterior = ini;
+            ini = ini->right;
 
             anterior->right = nova;
-            nova->right = teste;
+            nova->right = ini;
             break;
         }        
-        anterior = teste;
-        teste = teste->right;
+        anterior = ini;
+        ini = ini->right;
     }
+ anterior = NULL;
+ teste = NULL;
+ free(teste);
+ free(anterior);   
+ return ini;
 }
 
-Matrix* matrix_create( ){
+Matrix* matrix_create( ) {
     int linhas = 0, colunas = 0;
-    printf("Digite a qntd de linhas da matriz:");
-    scanf("%d", &linhas);
-    printf("Digite a qntd de colunas da matriz:");
-    scanf("%d", &colunas);
+    printf("Digite a qntd de linhas e colunas da matriz:");
+    scanf("%d %d", &linhas, &colunas);
 
     int  l=-1, c=-1, leituras = 0;
     float valor=0;
@@ -166,44 +163,39 @@ Matrix* matrix_create( ){
 
     while( 1 ) {
         printf("Digite a linha, coluna e valor a ser guardado na matriz.\n");
-        printf("DIgite a linha:");
         scanf("%d %d %f", &l, &c, &valor);
         if( l == 0 )
             return ini;
         
-        if(linhas < l || colunas < c)
-        {
+        if(linhas < l || colunas < c) {
             printf("\n\tERRO!\n\n");
         } else {
             
             insere( ini, linhas, colunas, l, c, valor );
             leituras++;
 
-            if(leituras == (linhas * colunas) )
-            {
+            if(leituras == (linhas * colunas) ) {
             return ini;
             }
         }
     }
-
 return ini;
 }
 
-void matrix_print( Matrix* m ){
+void matrix_print( Matrix* m ) {
     int linhas = 0, colunas = 0;
     
     linhas = cont_linhas(m);
     colunas = cont_colunas(m);
 
     printf("%d %d\n", linhas, colunas);
-	while(1){
+	while(1) {
         m = m->below;
-             while(1){
+             while(1) {
                 m = m->right;
-                if(m->column != -1 && m->line != -1){
+                if(m->column != -1 && m->line != -1) {
                     printf("%d, %d, %.2f \n", m->line, m->column, m->info);
-                } else if (m->line == -1)
-                {
+                } else if (m->line == -1) {
                    break;
                 }
             }  
@@ -213,25 +205,22 @@ void matrix_print( Matrix* m ){
 }
 
 
-float matrix_getelem( Matrix* m, int x, int y ){
+float matrix_getelem( Matrix* m, int x, int y ) { 
     int linhas = 0, colunas = 0;
     
     linhas = cont_linhas(m);
     colunas = cont_colunas(m);
 
-    if( x <= linhas && y <= colunas){
-
+    if( x <= linhas && y <= colunas) {
         for(int i = 1; i <= y; i++ )
             m = m->right;
 
-        for (int i = 0; i <= x; i++)
-        {
-            if(m->line == x && m->column == y){
+        for (int i = 0; i <= x; i++) {
+            if(m->line == x && m->column == y) {
                 return m->info;
-            }else if (m->below->column == -1){
+            }else if (m->below->column == -1) {
                 return 0;
             }
-
             m = m->below;
         }
     }else {
@@ -241,7 +230,7 @@ float matrix_getelem( Matrix* m, int x, int y ){
     return -1;
 }
 
-void matrix_setelem( Matrix* m, int x, int y, float elem ){
+void matrix_setelem( Matrix* m, int x, int y, float elem ) {
     Matrix *aux = m;
     int linhas = 0, colunas = 0;
     linhas = cont_linhas(m);
@@ -249,11 +238,10 @@ void matrix_setelem( Matrix* m, int x, int y, float elem ){
 
     for(int i = 1; i <= y; i++ )
         m = m->right;
-    for (int i = 0; i <= x; i++)
-    {
-        if(m->line == x && m->column == y){
+    for (int i = 0; i <= x; i++) {
+        if(m->line == x && m->column == y) {
             m->info = elem;
-        }else if (m->below->column == -1){  // celula vazia, malloc em novo elemento
+        }else if (m->below->column == -1) {  // celula vazia. malloc em novo elemento
             insere(aux, linhas, colunas, x, y, elem);
         }
         m = m->below;
@@ -262,51 +250,69 @@ void matrix_setelem( Matrix* m, int x, int y, float elem ){
 }
 
 
-/*
-void matrix_destroy( Matrix* m ){   //    INCOMPLETA
-//                                      fazer testes de memoria e revisar a logica,
-//                                      talvez tambem precise de ponteoro p/ anterior
+void matrix_destroy( Matrix* m ) {   //      revisar a logica e arrumar leak de memoria
 
-    Matrix *aux;
-    while(1){   // free em td que não for cabeça
+    Matrix *aux = m, *anterior = m;
+    while(1) {               // free em td que não for cabeça (conteúdo da matriz)
+        anterior = m;
         m = m->below;
-        while(1){
-            if(m->column != -1 && m->line != -1){
-                aux = m->right;
+
+        while(1) {
+            if(m->column != -1 && m->line != -1) {    // teste p/ ver se celula existe
+                anterior->right = m->right;
                 free(m);
-                m = aux;
-            } else if (m->line == -1)
-            {
+                m = anterior;
+                printf("....... teste1 ........\n");
+            } else if (m->line == -1) {     // se a próxima celula conter linha for == -1 sai do laço OU pula p/ proxima coluna  
                break;
-            }else{
+            } else {
+                anterior = m;
                 m = m->right;
             }
         }  
         if(m->column == -1 && m->line == -1)  
             break;
 	}
+    printf("....... teste ........\n");
+    anterior = NULL;
 
-    while (1)   // free nas cabeças das linhas
-    {
+    while (1) {   // free nas cabeças das linhas
+        anterior = m;
         m = m->below;
-        while (1)
-        {   
-            if(m->column != -1){
-                if(m->line != -1){
-            
-                }else{
-                    break;
-                }
-            }else {
+        while (1) {   
+            if(m->column == 0 && m->line == -1) {
+                anterior->below = m->below;
+                free(m);
+                m = anterior;
+            }else if(m->column == -1) {
                 break;
             }
         }
         if(m->column == -1 && m->line == -1)  
             break;
     }
-    
-    
+
+     while (1) {   // free nas cabeças das colunas
+        anterior = m;
+        m = m->right;
+        while (1) {   
+            if(m->column == -1 && m->line == 0) {
+                anterior->right = m->right;
+                free(m);
+                m = anterior;
+            }else if(m->line == -1) {
+                break;
+            }
+        }
+        if(m->column == -1 && m->line == -1) {
+            free(m);
+            break;
+        } 
+    }
+    printf("\n Matriz excluida!");
 }
+
+/*
 
 Matrix* matrix_add( Matrix* m, Matrix* n ){
 
