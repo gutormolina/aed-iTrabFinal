@@ -28,8 +28,9 @@ int main(void)
 
     matrix_print( ini );
     matrix_destroy(ini);
-    
-    printf("\n Matriz excluida2!");
+//   ini=NULL;
+//   matrix_print( ini );
+   printf("\n Matriz excluida2!\n");
 }
 
 void imprime(Matrix *ini, int linhas, int colunas){
@@ -147,7 +148,7 @@ void insere(Matrix *ini, int linhas, int colunas, int l, int c, float valor) {
  teste = NULL;
  free(teste);
  free(anterior);   
- return ini;
+
 }
 
 Matrix* matrix_create( ) {
@@ -183,25 +184,31 @@ return ini;
 }
 
 void matrix_print( Matrix* m ) {
-    int linhas = 0, colunas = 0;
+    if(m->line != -1 && m->column != -1){
+         printf("\tMatriz vazia!\n");
+         return;
+    } else {
+printf("\tpassou\n");
+        int linhas = 0, colunas = 0;
     
-    linhas = cont_linhas(m);
-    colunas = cont_colunas(m);
+        linhas = cont_linhas(m);
+        colunas = cont_colunas(m);
 
-    printf("%d %d\n", linhas, colunas);
-	while(1) {
-        m = m->below;
-             while(1) {
-                m = m->right;
-                if(m->column != -1 && m->line != -1) {
-                    printf("%d, %d, %.2f \n", m->line, m->column, m->info);
-                } else if (m->line == -1) {
-                   break;
-                }
-            }  
-        if(m->column == -1 && m->line == -1)  
-            return;
-	}
+        printf("%d %d\n", linhas, colunas);
+        while(1) {
+            m = m->below;
+                while(1) {
+                    m = m->right;
+                    if(m->column != -1 && m->line != -1) {
+                        printf("%d, %d, %.2f \n", m->line, m->column, m->info);
+                    } else if (m->line == -1) {
+                    break;
+                    }
+                }  
+            if(m->column == -1 && m->line == -1)  
+                return;
+        }
+    }
 }
 
 
@@ -252,7 +259,7 @@ void matrix_setelem( Matrix* m, int x, int y, float elem ) {
 
 void matrix_destroy( Matrix* m ) {   //      revisar a logica e arrumar leak de memoria
 
-    Matrix *aux = m, *anterior = m;
+    Matrix  *anterior = m;
     while(1) {               // free em td que não for cabeça (conteúdo da matriz)
         anterior = m;
         m = m->below;
@@ -263,7 +270,11 @@ void matrix_destroy( Matrix* m ) {   //      revisar a logica e arrumar leak de 
                 free(m);
                 m = anterior;
                 printf("....... teste1 ........\n");
-            } else if (m->line == -1) {     // se a próxima celula conter linha for == -1 sai do laço OU pula p/ proxima coluna  
+            } else if ( m->column == 0 && m->right == m) {  // free na cabeça da linha
+                anterior = m->below;
+                free(m);
+                m = anterior;
+               printf("\npula....");
                break;
             } else {
                 anterior = m;
@@ -273,26 +284,9 @@ void matrix_destroy( Matrix* m ) {   //      revisar a logica e arrumar leak de 
         if(m->column == -1 && m->line == -1)  
             break;
 	}
-    printf("....... teste ........\n");
-    anterior = NULL;
-
-    while (1) {   // free nas cabeças das linhas
-        anterior = m;
-        m = m->below;
-        while (1) {   
-            if(m->column == 0 && m->line == -1) {
-                anterior->below = m->below;
-                free(m);
-                m = anterior;
-            }else if(m->column == -1) {
-                break;
-            }
-        }
-        if(m->column == -1 && m->line == -1)  
-            break;
-    }
-
-     while (1) {   // free nas cabeças das colunas
+    
+    
+    while (1) {   // free nas cabeças das colunas
         anterior = m;
         m = m->right;
         while (1) {   
@@ -309,7 +303,8 @@ void matrix_destroy( Matrix* m ) {   //      revisar a logica e arrumar leak de 
             break;
         } 
     }
-    printf("\n Matriz excluida!");
+    anterior = NULL;
+    m = NULL;
 }
 
 /*
@@ -342,6 +337,7 @@ int cont_linhas(Matrix *m){
         }
     }
     m = aux;
+    aux=NULL;
     return linhas;
 }
 
@@ -358,5 +354,6 @@ int cont_colunas(Matrix *m){
         }
     }
      m = aux;
+     aux=NULL;
     return colunas;
 }
