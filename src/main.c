@@ -12,25 +12,35 @@ int cont_linhas(Matrix *m);
 int cont_colunas(Matrix *m);
 void matrix_setelem( Matrix* m, int x, int y, float elem );
 void matrix_destroy( Matrix* m );
+Matrix* matrix_transpose( Matrix* m );
 
 int main(void)
 {
 //  float f = 0;
-	Matrix *ini;
+	Matrix *ini1, *mt;
 
-    ini = matrix_create( );
+    ini1 = matrix_create( );
+    mt = matrix_transpose(ini1);
 
-    
 //  f = matrix_getelem(ini, 1, 1);
 //  printf("\n f = %.2f", f);
 //    matrix_setelem(ini, 1, 1, 1.23);
 //    matrix_setelem(ini, 1, 2, 2.34);
 
-    matrix_print( ini );
-    matrix_destroy(ini);
+    matrix_print( ini1 );
+   printf("-------------------------\n");
+   matrix_print( mt );
+
+    matrix_destroy(ini1);
+ //   printf("\tteste 1\n");
+
+//    imprime(mt, 2, 1);
+
+    matrix_destroy(mt);
+//    printf("\tteste 2\n");
 //   ini=NULL;
 //   matrix_print( ini );
-   printf("\n Matriz excluida2!\n");
+
 }
 
 void imprime(Matrix *ini, int linhas, int colunas){
@@ -188,13 +198,12 @@ void matrix_print( Matrix* m ) {
          printf("\tMatriz vazia!\n");
          return;
     } else {
-printf("\tpassou\n");
         int linhas = 0, colunas = 0;
     
         linhas = cont_linhas(m);
         colunas = cont_colunas(m);
 
-        printf("%d %d\n", linhas, colunas);
+        printf("%d %d <=tam\n", linhas, colunas);
         while(1) {
             m = m->below;
                 while(1) {
@@ -269,13 +278,14 @@ void matrix_destroy( Matrix* m ) {   //      revisar a logica e arrumar leak de 
                 anterior->right = m->right;
                 free(m);
                 m = anterior;
-                printf("....... teste1 ........\n");
-            } else if ( m->column == 0 && m->right == m) {  // free na cabeça da linha
-                anterior = m->below;
-                free(m);
-                m = anterior;
-               printf("\npula....");
-               break;
+
+                if(m->column == 0 && m->right == m){
+                    anterior = m->below;
+                    free(m);
+                    m = anterior;
+                }
+                if(m->column == -1 && m->line == -1)
+                    break;               
             } else {
                 anterior = m;
                 m = m->right;
@@ -284,8 +294,7 @@ void matrix_destroy( Matrix* m ) {   //      revisar a logica e arrumar leak de 
         if(m->column == -1 && m->line == -1)  
             break;
 	}
-    
-    
+
     while (1) {   // free nas cabeças das colunas
         anterior = m;
         m = m->right;
@@ -307,6 +316,32 @@ void matrix_destroy( Matrix* m ) {   //      revisar a logica e arrumar leak de 
     m = NULL;
 }
 
+Matrix* matrix_transpose( Matrix* m ) {
+    Matrix *mt;
+    int linhas = 0, colunas = 0;
+    linhas = cont_colunas(m);
+    colunas = cont_linhas(m);
+
+    mt = criaCabecas(linhas, colunas);
+
+    while (1)       // pula linha da matriz m
+    {
+        m = m->below;
+        while (1)
+        {
+            m = m->right;
+            if(m->line != -1 && m->column != -1){
+                insere(mt, linhas, colunas, m->column, m->line, m->info);
+            } else if ( (m->line == -1 && m->column == 0) || (m->line == -1 && m->column == -1) ){
+                 break;
+            }
+        }
+        if (m->line == -1 && m->column == -1)
+            break;        
+    }
+    return mt;    
+}
+
 /*
 
 Matrix* matrix_add( Matrix* m, Matrix* n ){
@@ -314,10 +349,6 @@ Matrix* matrix_add( Matrix* m, Matrix* n ){
 }
 
 Matrix* matrix_multiply( Matrix* m, Matrix* n ){
-
-}
-
-Matrix* matrix_transpose( Matrix* m ){
 
 }
 
