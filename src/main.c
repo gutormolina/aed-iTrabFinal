@@ -13,34 +13,29 @@ int cont_colunas(Matrix *m);
 void matrix_setelem( Matrix* m, int x, int y, float elem );
 void matrix_destroy( Matrix* m );
 Matrix* matrix_transpose( Matrix* m );
+Matrix* matrix_add( Matrix* m, Matrix* n );
 
 int main(void)
 {
-//  float f = 0;
-	Matrix *ini1, *mt;
+  float f = 0;
+	Matrix *ini1, *ini2, *ini3;
 
     ini1 = matrix_create( );
-    mt = matrix_transpose(ini1);
+    ini2 = matrix_create( );
+    ini3 = matrix_add(ini1, ini2);
 
-//  f = matrix_getelem(ini, 1, 1);
-//  printf("\n f = %.2f", f);
-//    matrix_setelem(ini, 1, 1, 1.23);
-//    matrix_setelem(ini, 1, 2, 2.34);
-
-    matrix_print( ini1 );
-   printf("-------------------------\n");
-   matrix_print( mt );
+    /*
+    matrix_print(ini1);
+    printf("------------------");
+    matrix_print(ini2);
+    printf("------------------");
+    */
+   imprime(ini3, 1, 2);
+    matrix_print(ini3);
+    printf("------------------");
 
     matrix_destroy(ini1);
- //   printf("\tteste 1\n");
-
-//    imprime(mt, 2, 1);
-
-    matrix_destroy(mt);
-//    printf("\tteste 2\n");
-//   ini=NULL;
-//   matrix_print( ini );
-
+    matrix_destroy(ini2);
 }
 
 void imprime(Matrix *ini, int linhas, int colunas){
@@ -243,7 +238,7 @@ float matrix_getelem( Matrix* m, int x, int y ) {
         printf("\tInvalido!");
         return 0;
     }
-    return -1;
+    return 0;
 }
 
 void matrix_setelem( Matrix* m, int x, int y, float elem ) {
@@ -342,11 +337,38 @@ Matrix* matrix_transpose( Matrix* m ) {
     return mt;    
 }
 
-/*
-
 Matrix* matrix_add( Matrix* m, Matrix* n ){
+    Matrix *result;
+    int m_linhas = 0, m_colunas = 0, n_linhas =0, n_colunas = 0;
+    float soma = 0;
+    m_linhas = cont_linhas(m);
+    m_colunas = cont_colunas(m);
+    n_linhas = cont_linhas(n);
+    n_colunas = cont_colunas(n);
 
+    if( m_linhas == n_linhas && m_colunas == n_colunas ){
+
+        result = criaCabecas(m_linhas, m_colunas);
+
+        for(int i=1; i<=m_linhas; i++) {
+            for (int j = 1; j <= m_colunas; j++) {
+                soma = 0;
+                soma += matrix_getelem(m, i, j);
+                soma += matrix_getelem(n, i, j);
+                printf("(s = %f)\n", soma);
+                if (soma != 0)
+                {
+                    insere(result, m_linhas, m_colunas, i, j, soma);
+                }
+            }
+        }
+    }else{
+        printf("\n\tNao foi possivel fazer a soma!\n");
+    }
+    return result;
 }
+
+/*
 
 Matrix* matrix_multiply( Matrix* m, Matrix* n ){
 
