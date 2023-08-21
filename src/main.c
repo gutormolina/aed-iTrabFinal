@@ -203,7 +203,6 @@ void matrix_print( Matrix* m ) {
     }
 }
 
-
 float matrix_getelem( Matrix* m, int x, int y ) { 
     int linhas = 0, colunas = 0;
     
@@ -247,7 +246,6 @@ void matrix_setelem( Matrix* m, int x, int y, float elem ) {
     }
 
 }
-
 
 void matrix_destroy( Matrix* m ) {   //      revisar a logica e arrumar leak de memoria
 
@@ -362,22 +360,47 @@ Matrix* matrix_add( Matrix* m, Matrix* n ){
     return result;
 }
 
-/*
 Matrix* matrix_multiply( Matrix* m, Matrix* n ){
     if(cont_colunas(m) == cont_linhas(n)){
-        Matrix *mult;
+        Matrix *result = criaCabecas(cont_colunas(n), cont_linhas(m));
+        int m_linhas = 0, m_colunas = 0, n_linhas =0, n_colunas = 0;
+        float mult, soma;
+        m_linhas = cont_linhas(m);
+        m_colunas = cont_colunas(m);
+        n_linhas = cont_linhas (n);
+        n_colunas = cont_colunas(n);
 
+        for (int i = 1; i < m_linhas; i++)
+        {
+            for (int j = 1; j < m_colunas; j++)
+            {
+                soma = 0;
 
+                for (int k = 1; k < m_colunas; k++)
+                {
+                    mult = 1;
+                    mult = mult * matrix_getelem(m, i, j);
+                    mult = mult * matrix_getelem(n, j, i);
+                    soma += mult;
+                }
+                
+                if (soma != 0)
+                {
+                    insere(result, m_linhas, n_colunas, i, j, soma);
+                }
+                
+            }
+            
+        }
+        
+        
 
-        return mult;
+        return result;
     }else{
         printf("\n\tNao foi possivel multiplicar estas matrizes!\n");
         return NULL;
     }
 }
-*/
-
-
 
 int cont_linhas(Matrix *m){
     int linhas = 0;
