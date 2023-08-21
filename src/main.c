@@ -18,14 +18,11 @@ Matrix* matrix_multiply( Matrix* m, Matrix* n );
 
 int main(void)
 {
-	Matrix *ini1, *ini2;
+	Matrix *ini1;
 
     ini1 = matrix_create( );
-    ini2 = matrix_create( );
 
-    Matrix *mult = matrix_multiply(ini1, ini2);
-
-    matrix_print(mult);
+    matrix_print(ini1);
 
     matrix_destroy(ini1);
 }
@@ -253,57 +250,38 @@ void matrix_setelem( Matrix* m, int x, int y, float elem ) {
 
 void matrix_destroy( Matrix* m ) {   //      revisar a logica e arrumar leak de memoria
 
-    Matrix  *anterior = m;
+    int l = cont_linhas(m), cont = 0;
+
+    Matrix *cabeca, *proximo;
     while(1) {               // free em td que não for cabeça (conteúdo da matriz)
-        anterior = m;
-        m = m->below;
-
-        while(1) {
-            if(m->column != -1 && m->line != -1) {    // teste p/ ver se celula existe
-                anterior->right = m->right;
+        cabeca = m;
+        m = m->right;
+        while (1)
+        {
+            if ( m->line != -1)
+            {
+                proximo = m->right;
                 free(m);
-                m = anterior;
-
-                if(m->column == 0 && m->right == m){
-                    anterior = m->below;
-                    free(m);
-                    m = anterior;
-                }
-                if(m->column == -1 && m->line == -1)
-                    break;               
-            }else if( m->line == -1 && m->column == 0 ){
-                anterior = m->below;
+                m = proximo;
+                
+            }else if (m->line == -1 && m == cabeca)
+            {
+                proximo = m->below;
                 free(m);
-                m = anterior;
-                if(m->column == -1 && m->line == -1)
-                    break;  
-            } else {
-                anterior = m;
+                m = proximo;
+                cont++;
+                    break;
+            }else{
                 m = m->right;
             }
-        }  
-        if(m->column == -1 && m->line == -1)  
+            
+        }
+        
+        if(cont == l+1)
             break;
 	}
-
-    while (1) {   // free nas cabeças das colunas
-        anterior = m;
-        m = m->right;
-        while (1) {   
-            if(m->column == -1 && m->line == 0) {
-                anterior->right = m->right;
-                free(m);
-                m = anterior;
-            }else if(m->line == -1) {
-                break;
-            }
-        }
-        if(m->column == -1 && m->line == -1) {
-            free(m);
-            break;
-        } 
-    }
-    anterior = NULL;
+    
+    proximo = NULL;
     m = NULL;
 }
 
