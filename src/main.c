@@ -14,15 +14,17 @@ void matrix_setelem( Matrix* m, int x, int y, float elem );
 void matrix_destroy( Matrix* m );
 Matrix* matrix_transpose( Matrix* m );
 Matrix* matrix_add( Matrix* m, Matrix* n );
+// Matrix* matrix_multiply( Matrix* m, Matrix* n );
 
 int main(void)
 {
-  float f = 0;
-	Matrix *ini1, *ini2, *ini3;
+
+	Matrix *ini1, *ini2;
 
     ini1 = matrix_create( );
     ini2 = matrix_create( );
-    ini3 = matrix_add(ini1, ini2);
+    
+//    matrix_multiply(ini1, ini2);
 
     /*
     matrix_print(ini1);
@@ -30,9 +32,6 @@ int main(void)
     matrix_print(ini2);
     printf("------------------");
     */
-   imprime(ini3, 1, 2);
-    matrix_print(ini3);
-    printf("------------------");
 
     matrix_destroy(ini1);
     matrix_destroy(ini2);
@@ -346,7 +345,7 @@ Matrix* matrix_add( Matrix* m, Matrix* n ){
     n_linhas = cont_linhas(n);
     n_colunas = cont_colunas(n);
 
-    if( m_linhas == n_linhas && m_colunas == n_colunas ){
+    if( (m_linhas == n_linhas) && m_colunas == n_colunas ){
 
         result = criaCabecas(m_linhas, m_colunas);
 
@@ -369,12 +368,20 @@ Matrix* matrix_add( Matrix* m, Matrix* n ){
 }
 
 /*
-
 Matrix* matrix_multiply( Matrix* m, Matrix* n ){
+    if(cont_colunas(m) == cont_linhas(n)){
+        Matrix *mult;
 
+
+
+        return mult;
+    }else{
+        printf("\n\tNao foi possivel multiplicar estas matrizes!\n");
+        return NULL;
+    }
 }
-
 */
+
 
 
 int cont_linhas(Matrix *m){
