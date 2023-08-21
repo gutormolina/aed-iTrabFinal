@@ -14,14 +14,18 @@ void matrix_setelem( Matrix* m, int x, int y, float elem );
 void matrix_destroy( Matrix* m );
 Matrix* matrix_transpose( Matrix* m );
 Matrix* matrix_add( Matrix* m, Matrix* n );
-// Matrix* matrix_multiply( Matrix* m, Matrix* n );
+Matrix* matrix_multiply( Matrix* m, Matrix* n );
 
 int main(void)
 {
-
-	Matrix *ini1;
+	Matrix *ini1, *ini2;
 
     ini1 = matrix_create( );
+    ini2 = matrix_create( );
+
+    Matrix *mult = matrix_multiply(ini1, ini2);
+
+    matrix_print(mult);
 
     matrix_destroy(ini1);
 }
@@ -361,45 +365,39 @@ Matrix* matrix_add( Matrix* m, Matrix* n ){
 }
 
 Matrix* matrix_multiply( Matrix* m, Matrix* n ){
-    if(cont_colunas(m) == cont_linhas(n)){
-        Matrix *result = criaCabecas(cont_colunas(n), cont_linhas(m));
-        int m_linhas = 0, m_colunas = 0, n_linhas =0, n_colunas = 0;
-        float mult, soma;
-        m_linhas = cont_linhas(m);
-        m_colunas = cont_colunas(m);
-        n_linhas = cont_linhas (n);
+    int m_linhas = cont_linhas(m),
+        m_colunas = cont_colunas(m),
+        n_linhas = cont_linhas(n),
         n_colunas = cont_colunas(n);
 
-        for (int i = 1; i < m_linhas; i++)
-        {
-            for (int j = 1; j < m_colunas; j++)
-            {
-                soma = 0;
-
-                for (int k = 1; k < m_colunas; k++)
-                {
-                    mult = 1;
-                    mult = mult * matrix_getelem(m, i, j);
-                    mult = mult * matrix_getelem(n, j, i);
-                    soma += mult;
-                }
-                
-                if (soma != 0)
-                {
-                    insere(result, m_linhas, n_colunas, i, j, soma);
-                }
-                
-            }
-            
-        }
-        
-        
-
-        return result;
-    }else{
+    if(m_colunas != n_linhas){
         printf("\n\tNao foi possivel multiplicar estas matrizes!\n");
         return NULL;
     }
+        
+    Matrix *result = criaCabecas(m_linhas, n_colunas);
+
+    for (int i = 1; i < m_linhas; i++)
+    {
+        for (int j = 1; j < n_colunas; j++)
+        {
+            float soma = 0;
+
+            for (int k = 1; k < m_colunas; k++)
+            {
+                float a = matrix_getelem(m, i, k);
+                float b = matrix_getelem(n, k, j);
+                soma += a * b;
+            }
+            
+            if (soma != 0.0)
+            {
+                insere(result, m_linhas, n_colunas, i, j, soma);
+            }
+        }
+    }
+
+    return result;
 }
 
 int cont_linhas(Matrix *m){
