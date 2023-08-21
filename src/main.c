@@ -19,22 +19,11 @@ Matrix* matrix_add( Matrix* m, Matrix* n );
 int main(void)
 {
 
-	Matrix *ini1, *ini2;
+	Matrix *ini1;
 
     ini1 = matrix_create( );
-    ini2 = matrix_create( );
-    
-//    matrix_multiply(ini1, ini2);
-
-    /*
-    matrix_print(ini1);
-    printf("------------------");
-    matrix_print(ini2);
-    printf("------------------");
-    */
 
     matrix_destroy(ini1);
-    matrix_destroy(ini2);
 }
 
 void imprime(Matrix *ini, int linhas, int colunas){
@@ -280,6 +269,12 @@ void matrix_destroy( Matrix* m ) {   //      revisar a logica e arrumar leak de 
                 }
                 if(m->column == -1 && m->line == -1)
                     break;               
+            }else if( m->line == -1 && m->column == 0 ){
+                anterior = m->below;
+                free(m);
+                m = anterior;
+                if(m->column == -1 && m->line == -1)
+                    break;  
             } else {
                 anterior = m;
                 m = m->right;
