@@ -151,7 +151,7 @@ void insere(Matrix *ini, int linhas, int colunas, int l, int c, float valor)
 }
 
 /*
-Matrix *matrix_create()
+Matrix *matrix_create() // Create funcionamento normal
 {
     int linhas = 0, colunas = 0;
     printf("Digite a qntd de linhas e colunas da matriz:");
@@ -285,7 +285,7 @@ void matrix_setelem(Matrix *m, int x, int y, float elem)
 }
 
 void matrix_destroy(Matrix *m)
-{ //      revisar a logica e arrumar leak de memoria
+{
 
     int l = cont_linhas(m), cont = 0;
 
@@ -473,7 +473,7 @@ int cont_colunas(Matrix *m)
     return colunas;
 }
 
-Matrix *matrix_create()
+Matrix *matrix_create() // Create teste 100mb
 {
     Matrix *ini;
 
