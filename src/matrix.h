@@ -392,8 +392,8 @@ Matrix *matrix_add(Matrix *m, Matrix *n)
 
     return result;
 }
-
-Matrix *matrix_multiply(Matrix *m, Matrix *n)
+/*
+Matrix *matrix_multiply(Matrix *m, Matrix *n) // Multiply matriz esparsa
 {
     int m_linhas = cont_linhas(m),
         m_colunas = cont_colunas(m),
@@ -430,6 +430,7 @@ Matrix *matrix_multiply(Matrix *m, Matrix *n)
 
     return result;
 }
+*/
 
 int cont_linhas(Matrix *m)
 {
@@ -473,6 +474,7 @@ int cont_colunas(Matrix *m)
     return colunas;
 }
 
+/*
 Matrix *matrix_create() // Create teste 100mb
 {
     Matrix *ini;
@@ -492,5 +494,61 @@ Matrix *matrix_create() // Create teste 100mb
         }
     }
 
+    return ini;
+}
+*/
+
+Matrix *matrix_multiply(Matrix* m, Matrix* n) // Multiply matriz normal
+{
+    int m_linhas = cont_linhas(m),
+    m_colunas = cont_colunas(m),
+    n_linhas = cont_linhas(n),
+    n_colunas = cont_colunas(n);
+
+    if (m_colunas != n_linhas)
+    {
+        printf("\n\tNao foi possivel multiplicar estas matrizes!\n");
+        return NULL;
+    }
+
+    Matrix *result = criaCabecas(m_linhas, n_colunas);
+
+    for (int i = 1; i <= m_linhas; i++)
+    {
+        for (int j = 1; j <= n_colunas; j++)
+        {
+            float soma = 0;
+
+            for (int k = 1; k <= m_colunas; k++)
+            {
+                float a = matrix_getelem(m, i, k);
+                float b = matrix_getelem(n, k, j);
+                soma += a * b;
+            }
+
+            insere(result, m_linhas, n_colunas, i, j, soma);
+        }
+    }
+
+    return result;
+}
+
+Matrix* matrix_create( unsigned int m) // Create matriz normal
+{
+    Matrix* ini;
+
+    ini = criaCabecas(m, m);
+
+    srand(time(NULL));
+
+    for (int i = 0; i < m; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            matrix_setelem(ini, i, j, rand() % 10);
+        }
+        
+    }
+    
     return ini;
 }
