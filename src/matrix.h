@@ -150,7 +150,6 @@ void insere(Matrix *ini, int linhas, int colunas, int l, int c, float valor)
     free(anterior);
 }
 
-
 /*
 Matrix *matrix_create()
 {
@@ -352,7 +351,7 @@ Matrix *matrix_transpose(Matrix *m)
         if (m->line == -1 && m->column == -1)
             break;
     }
-    
+
     return mt;
 }
 
@@ -478,19 +477,19 @@ Matrix *matrix_create()
 {
     Matrix *ini;
 
-    ini = criaCabecas(1790, 1750);
+    int a = 255,
+        b = 255;
 
+    ini = criaCabecas(a, b);
 
-     srand( time(NULL) );
+    srand(time(NULL));
 
-    for(int i=1; i<=1790; i++ )
+    for (int i = 1; i <= a; i++)
     {
-        for (int j=1; j<=1750; j++)
+        for (int j = 1; j <= b; j++)
         {
-            insere(ini, 1790, 1750, i, j, rand()%10 );
-            
+            insere(ini, a, b, i, j, rand() % 10);
         }
-        
     }
 
     return ini;
