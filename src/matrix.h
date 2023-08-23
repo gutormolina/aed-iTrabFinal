@@ -1,3 +1,6 @@
+#include <time.h>
+#include <ctype.h>
+
 struct matrix
 {
     struct matrix *right; // aponta o proximo elemento diferente de zero na mesma linha
@@ -147,6 +150,8 @@ void insere(Matrix *ini, int linhas, int colunas, int l, int c, float valor)
     free(anterior);
 }
 
+
+/*
 Matrix *matrix_create()
 {
     int linhas = 0, colunas = 0;
@@ -184,6 +189,7 @@ Matrix *matrix_create()
 
     return ini;
 }
+*/
 
 void matrix_print(Matrix *m)
 {
@@ -466,4 +472,26 @@ int cont_colunas(Matrix *m)
     m = aux;
     aux = NULL;
     return colunas;
+}
+
+Matrix *matrix_create()
+{
+    Matrix *ini;
+
+    ini = criaCabecas(1790, 1750);
+
+
+     srand( time(NULL) );
+
+    for(int i=1; i<=1790; i++ )
+    {
+        for (int j=1; j<=1750; j++)
+        {
+            insere(ini, 1790, 1750, i, j, rand()%10 );
+            
+        }
+        
+    }
+
+    return ini;
 }
