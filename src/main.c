@@ -10,6 +10,6 @@ int main(void)
     
     matrix_destroy(ini1);
     clock_t end = clock();
-    tempo+= (double)(end - begin) / CLOCKS_PER_SEC;
+    tempo += (double)(end - begin) / CLOCKS_PER_SEC;
     printf("TEMPO: %f", tempo);
 }
