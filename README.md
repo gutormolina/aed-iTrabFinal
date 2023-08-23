@@ -22,4 +22,4 @@ Devem ser realizados dois testes, sendo um deles com uma matriz gigante (cerca d
 
 ## O que está funcionando:
 
-Todas as funções são funcionais. O programa não tem nenhum leak de memória, como pode ser visto no arquivo ```valgrind-out.txt```.
+Todas as funções propostas são funcionais e como pode ser visto no arquivo ```src/valgrind-out.txt```, o programa não tem nenhum leak de memória.
