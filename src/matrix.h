@@ -23,6 +23,8 @@ void matrix_destroy(Matrix *m);
 Matrix *matrix_transpose(Matrix *m);
 Matrix *matrix_add(Matrix *m, Matrix *n);
 Matrix *matrix_multiply(Matrix *m, Matrix *n);
+Matrix* regular_matrix_create(unsigned int m);
+Matrix* regular_matrix_multiply(Matrix* m, Matrix* n);
 
 Matrix *criaCabecas(int linhas, int colunas)
 { // Função cria cabeças         <=======
@@ -498,7 +500,7 @@ Matrix *matrix_create() // Create teste 100mb
 }
 */
 
-Matrix *matrix_multiply(Matrix* m, Matrix* n) // Multiply matriz normal
+Matrix *regular_matrix_multiply(Matrix* m, Matrix* n) // Multiply matriz normal
 {
     int m_linhas = cont_linhas(m),
     m_colunas = cont_colunas(m),
@@ -533,7 +535,7 @@ Matrix *matrix_multiply(Matrix* m, Matrix* n) // Multiply matriz normal
     return result;
 }
 
-Matrix* matrix_create( unsigned int m) // Create matriz normal
+Matrix* regular_matrix_create(unsigned int m) // Create matriz normal
 {
     Matrix* ini;
 
