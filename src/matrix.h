@@ -396,7 +396,7 @@ Matrix *matrix_add(Matrix *m, Matrix *n)
 
     return result;
 }
-/*
+
 Matrix *matrix_multiply(Matrix *m, Matrix *n) // Multiply matriz esparsa
 {
     int m_linhas = cont_linhas(m),
@@ -434,7 +434,6 @@ Matrix *matrix_multiply(Matrix *m, Matrix *n) // Multiply matriz esparsa
 
     return result;
 }
-*/
 
 int cont_linhas(Matrix *m)
 {
