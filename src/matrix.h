@@ -66,12 +66,6 @@ Matrix *criaCabecas(int linhas, int colunas)
 
 void insere(Matrix *ini, int linhas, int colunas, int l, int c, float valor)
 {
-
-    if (valor == 0)
-    {
-        return;
-    }
-
     Matrix *nova = (Matrix *)malloc(sizeof(Matrix)), *teste = ini, *anterior = ini;
     nova->info = valor;
     nova->column = c;
@@ -154,11 +148,10 @@ void insere(Matrix *ini, int linhas, int colunas, int l, int c, float valor)
     free(anterior);
 }
 
-/*
-Matrix *matrix_create() // Create funcionamento normal
+Matrix *matrix_create()      // Create - matriz esparsa SEM 0's
 {
     int linhas = 0, colunas = 0;
-    printf("Digite a qntd de linhas e colunas da matriz:");
+
     scanf("%d %d", &linhas, &colunas);
 
     int l = -1, c = -1, leituras = 0;
@@ -169,20 +162,26 @@ Matrix *matrix_create() // Create funcionamento normal
 
     while (1)
     {
-        printf("Digite a linha, coluna e valor a ser guardado na matriz.\n");
-        scanf("%d %d %f", &l, &c, &valor);
+        scanf("%d", &l);
         if (l == 0)
             return ini;
+        scanf(" %d %f", &c, &valor);
 
         if (linhas < l || colunas < c)
         {
             printf("\n\tERRO!\n\n");
         }
-        else
+        else if (valor != 0)
         {
             insere(ini, linhas, colunas, l, c, valor);
             leituras++;
 
+            if (leituras == (linhas * colunas))
+            {
+                return ini;
+            }
+        }else{
+            leituras++;
             if (leituras == (linhas * colunas))
             {
                 return ini;
@@ -192,7 +191,6 @@ Matrix *matrix_create() // Create funcionamento normal
 
     return ini;
 }
-*/
 
 void matrix_print(Matrix *m)
 {
@@ -264,7 +262,7 @@ float matrix_getelem(Matrix *m, int x, int y)
     return 0;
 }
 
-void matrix_setelem(Matrix *m, int x, int y, float elem)
+void matrix_setelem(Matrix *m, int x, int y, float elem)    // insere 0's se informado 
 {
     Matrix *aux = m;
     int linhas = 0, colunas = 0;
@@ -280,7 +278,7 @@ void matrix_setelem(Matrix *m, int x, int y, float elem)
             m->info = elem;
         }
         else if (m->below->column == -1)
-        { // celula vazia. malloc em novo elemento
+        {   // celula vazia: malloc em novo elemento
             insere(aux, linhas, colunas, x, y, elem);
         }
 
@@ -290,12 +288,11 @@ void matrix_setelem(Matrix *m, int x, int y, float elem)
 
 void matrix_destroy(Matrix *m)
 {
-
     int l = cont_linhas(m), cont = 0;
 
     Matrix *cabeca, *proximo;
     while (1)
-    { // free em td que não for cabeça (conteúdo da matriz)
+    {
         cabeca = m;
         m = m->right;
         while (1)
@@ -397,9 +394,9 @@ Matrix *matrix_add(Matrix *m, Matrix *n)
     return result;
 }
 
-Matrix *matrix_multiply(Matrix *m, Matrix *n) // Multiply matriz esparsa
+Matrix *matrix_multiply(Matrix *m, Matrix *n) // Multiply matriz esparsa, não insere 0's 
 {
-    int m_linhas = cont_linhas(m),
+        int m_linhas = cont_linhas(m),
         m_colunas = cont_colunas(m),
         n_linhas = cont_linhas(n),
         n_colunas = cont_colunas(n);
@@ -478,12 +475,13 @@ int cont_colunas(Matrix *m)
 }
 
 /*
-Matrix *matrix_create() // Create teste 100mb
+Matrix *matrix_create() // Create teste 100mb: Matriz esparsa SEM 0's
 {
     Matrix *ini;
 
     int a = 255,
-        b = 255;
+        b = 255,
+        dado = 0;
 
     ini = criaCabecas(a, b);
 
@@ -493,7 +491,12 @@ Matrix *matrix_create() // Create teste 100mb
     {
         for (int j = 1; j <= b; j++)
         {
-            insere(ini, a, b, i, j, rand() % 10);
+            dado =  rand() % 10;
+            if (dado != 0)
+            {
+                insere(ini, a, b, i, j, dado);
+            }
+
         }
     }
 
@@ -501,7 +504,7 @@ Matrix *matrix_create() // Create teste 100mb
 }
 */
 
-Matrix *regular_matrix_multiply(Matrix* m, Matrix* n) // Multiply matriz normal
+Matrix *regular_matrix_multiply(Matrix* m, Matrix* n) // Multiply matriz normal (insere 0's)
 {
     int m_linhas = cont_linhas(m),
     m_colunas = cont_colunas(m),
@@ -536,7 +539,7 @@ Matrix *regular_matrix_multiply(Matrix* m, Matrix* n) // Multiply matriz normal
     return result;
 }
 
-Matrix* regular_matrix_create(unsigned int m) // Create matriz normal
+Matrix* regular_matrix_create(unsigned int m) // Create matriz normal (insere 0's)
 {
     Matrix* ini;
 
@@ -544,9 +547,9 @@ Matrix* regular_matrix_create(unsigned int m) // Create matriz normal
 
     srand(time(NULL));
 
-    for (int i = 0; i < m; i++)
+    for (unsigned i = 1; i <= m; i++)
     {
-        for (int j = 0; j < m; j++)
+        for (unsigned j = 1; j <= m; j++)
         {
             matrix_setelem(ini, i, j, rand() % 10);
         }
