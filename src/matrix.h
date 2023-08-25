@@ -194,7 +194,10 @@ Matrix *matrix_create()      // Create - matriz esparsa SEM 0's
 
 void matrix_print(Matrix *m)
 {
-    if (m->line != -1 && m->column != -1)
+    if(m == NULL){
+        printf("Matriz esta vazia!\n");
+        return;
+    }else if (m->line != -1 && m->column != -1)
     {
         printf("\tMatriz vazia!\n");
         return;
@@ -288,6 +291,8 @@ void matrix_setelem(Matrix *m, int x, int y, float elem)    // insere 0's se inf
 
 void matrix_destroy(Matrix *m)
 {
+    if(m == NULL)
+        return;
     int l = cont_linhas(m), cont = 0;
 
     Matrix *cabeca, *proximo;
@@ -378,7 +383,7 @@ Matrix *matrix_add(Matrix *m, Matrix *n)
                 soma = 0;
                 soma += matrix_getelem(m, i, j);
                 soma += matrix_getelem(n, i, j);
-                printf("(s = %f)\n", soma);
+                
                 if (soma != 0)
                 {
                     insere(result, m_linhas, m_colunas, i, j, soma);
@@ -389,6 +394,7 @@ Matrix *matrix_add(Matrix *m, Matrix *n)
     else
     {
         printf("\n\tNao foi possivel fazer a soma!\n");
+        result = NULL;
     }
 
     return result;

@@ -1,24 +1,33 @@
 #include "matrix.h"
 
-int main(void)
-{
-    double tempo = 0.0;
-    clock_t begin = clock();
+int main( void ) {
+/* Inicializacao da aplicacao ... */
 
-	Matrix *ini1, *ini2, *m;
+    Matrix *A = matrix_create();
+    matrix_print( A );
+    Matrix *B = matrix_create(); 
+    matrix_print( B );
 
-    ini1 = matrix_create();
-    ini2 = matrix_create();
+    printf("\n");
 
-    m = matrix_multiply(ini1, ini2);
+    Matrix *C = matrix_add( A, B ); 
+    matrix_print( C );
+    matrix_destroy( C );
+
+    printf("\n");
+
+    C = matrix_multiply( A, B ); 
+    matrix_print( C );
+    matrix_destroy( C );
+
+    printf("\n");
+
+    C = matrix_transpose( A ); 
+    matrix_print( C );
+
+    matrix_destroy( C );
+    matrix_destroy( A );
+    matrix_destroy( B );
     
-    matrix_print(m);
-
-    matrix_destroy(ini1);
-    matrix_destroy(ini2);
-    matrix_destroy(m);
-
-    clock_t end = clock();
-    tempo += (double)(end - begin) / CLOCKS_PER_SEC;
-    printf("\nTEMPO: %f", tempo);
-}
+    return 0;
+}   
