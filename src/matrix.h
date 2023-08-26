@@ -147,7 +147,7 @@ void insere(Matrix *ini, int linhas, int colunas, int l, int c, float valor)
     free(teste);
     free(anterior);
 }
-
+/* 
 Matrix *matrix_create()      // Create - matriz esparsa SEM 0's
 {
     int linhas = 0, colunas = 0;
@@ -191,7 +191,7 @@ Matrix *matrix_create()      // Create - matriz esparsa SEM 0's
 
     return ini;
 }
-
+ */
 void matrix_print(Matrix *m)
 {
     if(m == NULL){
@@ -480,7 +480,7 @@ int cont_colunas(Matrix *m)
     return colunas;
 }
 
-/*
+
 Matrix *matrix_create() // Create teste 100mb: Matriz esparsa SEM 0's
 {
     Matrix *ini;
@@ -508,7 +508,7 @@ Matrix *matrix_create() // Create teste 100mb: Matriz esparsa SEM 0's
 
     return ini;
 }
-*/
+
 
 Matrix *regular_matrix_multiply(Matrix* m, Matrix* n) // Multiply matriz normal (insere 0's)
 {
@@ -557,7 +557,7 @@ Matrix* regular_matrix_create(unsigned int m) // Create matriz normal (insere 0'
     {
         for (unsigned j = 1; j <= m; j++)
         {
-            matrix_setelem(ini, i, j, rand() % 10);
+            insere(ini, m, m, i, j, rand() % 2);
         }
         
     }
