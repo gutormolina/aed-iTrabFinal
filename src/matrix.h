@@ -497,7 +497,7 @@ Matrix *matrix_create() // Create teste 100mb: Matriz esparsa SEM 0's
     {
         for (int j = 1; j <= b; j++)
         {
-            dado =  rand() % 10;
+            dado =  rand() % 2;
             if (dado != 0)
             {
                 insere(ini, a, b, i, j, dado);
